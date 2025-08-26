@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weather-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weather-app
+  template:
+    metadata:
+      labels:
+        app: weather-app
+    spec:
+      containers:
+      - name: weather-app
+        image: akhi15/weather-app:latest # Use your Docker Hub username here
+        ports:
+        - containerPort: 5000
+        env:
+        - name: WEATHER_API_KEY
+          value: "YOUR_OPENWEATHERMAP_API_KEY" # Add your API key here
