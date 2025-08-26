@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  weather-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.weather-app
+    ports:
+      - "5000:5000"
+    environment:
+      - WEATHER_API_KEY=YOUR_OPENWEATHERMAP_API_KEY
+      
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sensor_data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  sensor-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile.sensor-generator
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=sensor_data
+      - DB_USER=postgres
+      - DB_PASS=postgres
+
+volumes:
+  db-data:
